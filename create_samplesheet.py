@@ -26,6 +26,9 @@ class SampleContainer:
                 self.add_sample(sample_name, file1, file2)
     
     def add_sample(self, sample_name: str, file1: str, file2: str):
+        if sample_name in self._samples:
+            print(f"We already have a sample with sample name {sample_name}. Exiting.")
+            sys.exit()
         self._samples[sample_name] = (file1, file2)
 
     def save():
@@ -57,13 +60,14 @@ def find_new_samples(fastq_dir: pathlib.Path):
     while True:
         try:
             file1_path = pathlib.Path(next(r1_files_gen))
+            sample_name = file1_path.stem[:-22]
             file1_filename = file1_path.parts[-1]
             listified_filename = list(file1_filename)
             listified_filename[-14] = '2'
             file2_filename = ''.join(listified_filename)
             file2_path = file1_path.with_name(file2_filename)
             assert(file2_path.exists())
-            output.append((str(file1_path), str(file2_path)))
+            output.append((sample_name, str(file1_path), str(file2_path)))
         except StopIteration:
             break
     return output
@@ -78,19 +82,17 @@ try:
 except TypeError:
     print("--sample_sheet not set and no value found for $GLOBAL_SAMPLE_SHEET. Exiting.")
     sys.exit(1)
+
 print(f"Sample sheet path: {SAMPLE_SHEET_PATH}")
 container = SampleContainer(SAMPLE_SHEET_PATH)
+print("*** OLD SAMPLES:")
 print(container._samples)
 FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
 print(f"Folder to add fastq files from: {FASTQ_DIR}")
 
 new_samples = find_new_samples(FASTQ_DIR)
+print("*** NEW SAMPLES:")
 print(new_samples)
-"""
 for new_sample in new_samples:
-    try:
-        samples.add(new_sample)
-    except ValueError:
-        print(f"Could not add sample...")
-samples.save()
-"""
+    container.add_sample(*new_sample)
+# container.save()
