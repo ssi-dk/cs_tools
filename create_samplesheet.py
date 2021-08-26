@@ -21,10 +21,14 @@ parser.add_argument('-d', '--fastq_dir', help="Path to existing directory contai
 args = parser.parse_args()
 
 try:
-    sample_sheet = pathlib.Path(args.sample_sheet or os.getenv('GLOBAL_SAMPLE_SHEET'))
+    sample_sheet_path = pathlib.Path(args.sample_sheet or os.getenv('GLOBAL_SAMPLE_SHEET'))
 except TypeError:
     print("--sample_sheet not set and no value found for $GLOBAL_SAMPLE_SHEET. Exiting.")
     sys.exit(1)
 
-fastq_dir = pathlib.Path(args.fastq_dir or os.getcwd())
-print(f"Looking for fastq files in {fastq_dir}.")
+with open(sample_sheet_path, 'a') as samples:
+    print(f"Opened sample sheet: {sample_sheet_path}")
+
+    fastq_dir = pathlib.Path(args.fastq_dir or os.getcwd())
+    print(f"Looking for fastq files in {fastq_dir}")
+    # sample_files = fastq_dir.glob("{samplename}_S*_R{1,2}_001.fastq*")
