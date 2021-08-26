@@ -13,6 +13,8 @@ Author: Finn Gruwier Larsen, figl@ssi.dk
 """
 
 parser = argparse.ArgumentParser(description="Create and maintain a global sample sheet for chewieSnake.")
-parser.add_argument('--fastxDir', help="Path to existing directory containing fastq files. Default: current directory.")
-parser.add_argument('--outDir', help="Path to existing output directory. Default: current directory.")
+parser.add_argument('-d', '--fastq_dir', help="Path to existing directory containing fastq files. Default: current directory.")
+parser.add_argument('-s', '--sample_sheet', help="Path and filename for global sample sheet."
+    "Default: value of envvar $GLOBAL_SAMPLE_SHEET. If file does not exist it will be created.")
 args = parser.parse_args()
+
