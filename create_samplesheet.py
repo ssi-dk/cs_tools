@@ -21,9 +21,13 @@ class SampleContainer:
 
     def __init__(self, sample_sheet_path: pathlib.Path):
         self._sample_sheet_path = sample_sheet_path
-        with open(self._sample_sheet_path, 'r') as sample_sheet:
-            for (sample_name, file1, file2) in read_sample_sheet(sample_sheet):
-                self.add_sample(sample_name, file1, file2)
+        if self._sample_sheet_path.exists():
+            print(f"{str(self._sample_sheet_path)} exists - reading file.")
+            with open(self._sample_sheet_path, 'r') as sample_sheet:
+                for (sample_name, file1, file2) in read_sample_sheet(sample_sheet):
+                    self.add_sample(sample_name, file1, file2)
+        else:
+            print(f"{str(self._sample_sheet_path)} does not exist - new file.")
     
     def add_sample(self, sample_name: str, file1: str, file2: str):
         if sample_name in self._samples:
