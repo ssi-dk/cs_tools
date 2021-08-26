@@ -35,16 +35,20 @@ class SampleContainer:
             sys.exit()
         self._samples[sample_name] = (file1, file2)
 
-    def save():
-        """Todo:
-            With self._sample_sheet_path open for writing:
-            Write to file overwriting any existing version
-        """
-        pass
+    def save(self):
+        with open(self._sample_sheet_path, 'w') as sample_sheet:
+            for k, v in self._samples.items():
+                line = '\t'.join((k, v[0], v[1]))
+                print(f"Adding line: {line}")
+                sample_sheet.write(line)
+            
 
 def read_sample_sheet(sample_sheet):
     output = list()
-    next(sample_sheet)  # Ignore header
+    try:
+        next(sample_sheet)  # Ignore header
+    except StopIteration:
+        print("File exists but contains no samples.")
     while True:
         try:
             line: str = next(sample_sheet)
@@ -99,4 +103,4 @@ print("*** NEW SAMPLES:")
 print(new_samples)
 for new_sample in new_samples:
     container.add_sample(*new_sample)
-# container.save()
+container.save()
