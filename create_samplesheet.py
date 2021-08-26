@@ -23,7 +23,7 @@ class SampleContainer:
         self._sample_sheet_path = sample_sheet_path
         with open(self._sample_sheet_path, 'r') as sample_sheet:
             for (sample_name, file1, file2) in read_sample_sheet(sample_sheet):
-                self._samples[sample_name] = (file1, file2)
+                self.add_sample(sample_name, file1, file2)
     
     def add_sample(self, sample_name: str, file1: str, file2: str):
         self._samples[sample_name] = (file1, file2)
