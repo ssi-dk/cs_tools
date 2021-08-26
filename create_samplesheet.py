@@ -48,18 +48,22 @@ def read_sample_sheet(sample_sheet):
     return output
 
 def find_new_samples(fastq_dir: pathlib.Path):
+    """
+    Find samples in folder. Return a list of (sample_name, file1, file2)
+    where file1, file2 have full paths.
+    """
     r1_files_gen = fastq_dir.glob("*_S*_R1_001.fastq*")
     output = list()
     while True:
         try:
             file1_path = pathlib.Path(next(r1_files_gen))
             file1_filename = file1_path.parts[-1]
-            listified = list(file1_filename)
-            listified[-14] = '2'
-            file2_filename = ''.join(listified)
+            listified_filename = list(file1_filename)
+            listified_filename[-14] = '2'
+            file2_filename = ''.join(listified_filename)
             file2_path = file1_path.with_name(file2_filename)
             assert(file2_path.exists())
-            output.append(file2_path)   
+            output.append((str(file1_path), str(file2_path)))
         except StopIteration:
             break
     return output
