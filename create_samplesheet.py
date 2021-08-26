@@ -41,7 +41,7 @@ def read_sample_sheet(sample_sheet):
     while True:
         try:
             line: str = next(sample_sheet)
-            sample_name, file1, file2 = line.split('\t')
+            sample_name, file1, file2 = line.rstrip().split('\t')
             output.append((sample_name, file1, file2))
         except StopIteration:
             break
@@ -65,12 +65,11 @@ try:
 except TypeError:
     print("--sample_sheet not set and no value found for $GLOBAL_SAMPLE_SHEET. Exiting.")
     sys.exit(1)
-print(f"Sample sheet: {SAMPLE_SHEET_PATH}")
+print(f"Sample sheet path: {SAMPLE_SHEET_PATH}")
+container = SampleContainer(SAMPLE_SHEET_PATH)
+print(container._samples)
 FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
-print(f"Folder to add: {FASTQ_DIR}")
-
-
-samples = SampleContainer(SAMPLE_SHEET_PATH)
+print(f"Folder to add fastq files from: {FASTQ_DIR}")
 
 """
 new_samples = find_new_samples(FASTQ_DIR)
