@@ -19,26 +19,35 @@ class SampleContainer:
     _samples: dict = {}
     _sample_sheet_path: pathlib.Path
 
-    def __init__(self):
-        self._sample_sheet_path = SAMPLE_SHEET_PATH
-        """Todo:
-            With SAMPLE_SHEET_PATH open for reading:
-            Add existing samples to _samples
-        """
+    def __init__(self, sample_sheet_path: pathlib.Path):
+        self._sample_sheet_path = sample_sheet_path
+        with open(self._sample_sheet_path, 'r') as sample_sheet:
+            for (sample_name, file1, file2) in read_sample_sheet(sample_sheet):
+                self._samples[sample_name] = (file1, file2)
     
-    def add_sample(sample_name):
-        """Todo: add to _samples. Directory is defined in FASTQ_DIR. Filenames follow Illumina standard."""
-        pass
+    def add_sample(self, sample_name: str, file1: str, file2: str):
+        self._samples[sample_name] = (file1, file2)
 
     def save():
         """Todo:
-            With SAMPLE_SHEET_PATH open for writing:
+            With self._sample_sheet_path open for writing:
             Write to file overwriting any existing version
         """
         pass
 
+def read_sample_sheet(sample_sheet):
+    output = list()
+    next(sample_sheet)  # Ignore header
+    while True:
+        try:
+            line: str = next(sample_sheet)
+            sample_name, file1, file2 = line.split('\t')
+            output.append((sample_name, file1, file2))
+        except StopIteration:
+            break
+    return output
 
-def get_new_samples(fastq_dir: pathlib.Path):
+def find_new_samples(fastq_dir: pathlib.Path):
     r1_files_gen = fastq_dir.glob("*_S*_R1_001.fastq*")
     while True:
         try:
@@ -60,9 +69,11 @@ print(f"Sample sheet: {SAMPLE_SHEET_PATH}")
 FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
 print(f"Folder to add: {FASTQ_DIR}")
 
+
+samples = SampleContainer(SAMPLE_SHEET_PATH)
+
 """
-samples = SampleContainer(sample_sheet)
-new_samples = get_new_samples(fastq_dir)
+new_samples = find_new_samples(FASTQ_DIR)
 for new_sample in new_samples:
     try:
         samples.add(new_sample)
