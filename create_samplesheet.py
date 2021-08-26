@@ -49,18 +49,20 @@ def read_sample_sheet(sample_sheet):
 
 def find_new_samples(fastq_dir: pathlib.Path):
     r1_files_gen = fastq_dir.glob("*_S*_R1_001.fastq*")
+    output = list()
     while True:
         try:
             file1_path = pathlib.Path(next(r1_files_gen))
             file1_filename = file1_path.parts[-1]
-            print(file1_filename)
             listified = list(file1_filename)
-            listified[-10] = '2'
+            listified[-14] = '2'
             file2_filename = ''.join(listified)
-            print(file2_filename)
-           
+            file2_path = file1_path.with_name(file2_filename)
+            assert(file2_path.exists())
+            output.append(file2_path)   
         except StopIteration:
             break
+    return output
 
 parser = argparse.ArgumentParser(description="Create and maintain a global sample sheet for chewieSnake.")
 parser.add_argument('-s', '--sample_sheet', help="Path and filename for global sample sheet."
@@ -79,6 +81,7 @@ FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
 print(f"Folder to add fastq files from: {FASTQ_DIR}")
 
 new_samples = find_new_samples(FASTQ_DIR)
+print(new_samples)
 """
 for new_sample in new_samples:
     try:
