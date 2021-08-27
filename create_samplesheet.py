@@ -38,7 +38,7 @@ class SampleContainer:
     def save(self):
         with open(self._sample_sheet_path, 'w') as sample_sheet:
             for k, v in self._samples.items():
-                line = '\t'.join((k, v[0], v[1]))
+                line = '\t'.join((k, v[0], v[1])) + '\n'
                 print(f"Adding line: {line}")
                 sample_sheet.write(line)
             
