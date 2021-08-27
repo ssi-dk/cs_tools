@@ -90,28 +90,32 @@ def print_samples(sample_iter: Iterable):
     for sample in sample_iter:
         print(sample[0], sample[1])
 
-parser = argparse.ArgumentParser(description="Create and maintain a global sample sheet for chewieSnake.")
-parser.add_argument('-s', '--sample_sheet', help="Path and filename for global sample sheet."
-    "Default: value of envvar $GLOBAL_SAMPLE_SHEET. If file does not exist it will be created.")
-parser.add_argument('-d', '--fastq_dir', help="Path to existing directory containing fastq files. Default: current directory.")
-args = parser.parse_args()
-try:
-    SAMPLE_SHEET_PATH = pathlib.Path(args.sample_sheet or os.getenv('GLOBAL_SAMPLE_SHEET'))
-except TypeError:
-    print("--sample_sheet not set and no value found for $GLOBAL_SAMPLE_SHEET. Exiting.")
-    sys.exit(1)
+def main():
+    parser = argparse.ArgumentParser(description="Create and maintain a global sample sheet for chewieSnake.")
+    parser.add_argument('-s', '--sample_sheet', help="Path and filename for global sample sheet."
+        "Default: value of envvar $GLOBAL_SAMPLE_SHEET. If file does not exist it will be created.")
+    parser.add_argument('-d', '--fastq_dir', help="Path to existing directory containing fastq files. Default: current directory.")
+    args = parser.parse_args()
+    try:
+        SAMPLE_SHEET_PATH = pathlib.Path(args.sample_sheet or os.getenv('GLOBAL_SAMPLE_SHEET'))
+    except TypeError:
+        print("--sample_sheet not set and no value found for $GLOBAL_SAMPLE_SHEET. Exiting.")
+        sys.exit(1)
 
-print(f"Sample sheet path: {SAMPLE_SHEET_PATH}")
-container = SampleContainer(SAMPLE_SHEET_PATH)
-print("OLD SAMPLES:")
-print_samples(container.list_samples())
-FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
-print(f"Folder to add fastq files from: {FASTQ_DIR}")
+    print(f"Sample sheet path: {SAMPLE_SHEET_PATH}")
+    container = SampleContainer(SAMPLE_SHEET_PATH)
+    print("OLD SAMPLES:")
+    print_samples(container.list_samples())
+    FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
+    print(f"Folder to add fastq files from: {FASTQ_DIR}")
 
-new_samples = find_new_samples(FASTQ_DIR)
-print("NEW SAMPLES:")
-print_samples(new_samples)
+    new_samples = find_new_samples(FASTQ_DIR)
+    print("NEW SAMPLES:")
+    print_samples(new_samples)
 
-for new_sample in new_samples:
-    container.add_sample(*new_sample)
-container.save()
+    for new_sample in new_samples:
+        container.add_sample(*new_sample)
+    container.save()
+
+if __name__ == '__main__':
+    main()
