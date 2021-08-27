@@ -97,13 +97,13 @@ def main():
     parser.add_argument('-d', '--fastq_dir', help="Path to existing directory containing fastq files. Default: current directory.")
     args = parser.parse_args()
     try:
-        SAMPLE_list_PATH = pathlib.Path(args.sample_list or os.getenv('GLOBAL_SAMPLE_list'))
+        SAMPLE_LIST_PATH = pathlib.Path(args.sample_list or os.getenv('GLOBAL_SAMPLE_list'))
     except TypeError:
         print("--sample_list / -l not set and no value found for $GLOBAL_SAMPLE_LIST. Exiting.")
         sys.exit(1)
 
-    print(f"Sample list path: {SAMPLE_list_PATH}")
-    container = SampleContainer(SAMPLE_list_PATH)
+    print(f"Sample list path: {SAMPLE_LIST_PATH}")
+    container = SampleContainer(SAMPLE_LIST_PATH)
     print("OLD SAMPLES:")
     print_samples(container.list_samples())
     FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
