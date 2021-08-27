@@ -5,7 +5,7 @@ import sys
 from typing import Iterable
 
 """
-Create and maintain a global sample sheet for chewieSnake.
+Create and maintain a global sample list for controlling chewieSnake.
 
 Currently only fastq files are supported, and fastq file names must follow the
 Illumina standard:
