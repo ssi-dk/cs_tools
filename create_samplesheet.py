@@ -86,7 +86,7 @@ def find_new_samples(fastq_dir: pathlib.Path):
     return output
 
 def print_samples(sample_iter: Iterable):
-    print("Name, File 1:")
+    print("(Name, File 1)")
     for sample in sample_iter:
         print(sample[0], sample[1])
 
@@ -103,14 +103,15 @@ except TypeError:
 
 print(f"Sample sheet path: {SAMPLE_SHEET_PATH}")
 container = SampleContainer(SAMPLE_SHEET_PATH)
-print("*** OLD SAMPLES:")
+print("OLD SAMPLES:")
 print_samples(container.list_samples())
 FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
 print(f"Folder to add fastq files from: {FASTQ_DIR}")
 
 new_samples = find_new_samples(FASTQ_DIR)
-print("*** NEW SAMPLES:")
-print(new_samples)
+print("NEW SAMPLES:")
+print_samples(new_samples)
+
 for new_sample in new_samples:
     container.add_sample(*new_sample)
 container.save()
