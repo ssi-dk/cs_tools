@@ -86,7 +86,7 @@ def find_new_samples(fastq_dir: pathlib.Path):
     return output
 
 def print_samples(sample_iter: Iterable):
-    print("(Name, File 1)")
+    print("(SampleID , File 1)")
     for sample in sample_iter:
         print(sample[0], sample[1])
 
