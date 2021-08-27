@@ -92,14 +92,14 @@ def print_samples(sample_iter: Iterable):
 
 def main():
     parser = argparse.ArgumentParser(description="Create and maintain a global sample list for chewieSnake.")
-    parser.add_argument('-s', '--sample_list', help="Path and filename for global sample list."
+    parser.add_argument('-l', '--sample_list', help="Path and filename for global sample list."
         "Default: value of envvar $GLOBAL_SAMPLE_list. If file does not exist it will be created.")
     parser.add_argument('-d', '--fastq_dir', help="Path to existing directory containing fastq files. Default: current directory.")
     args = parser.parse_args()
     try:
         SAMPLE_list_PATH = pathlib.Path(args.sample_list or os.getenv('GLOBAL_SAMPLE_list'))
     except TypeError:
-        print("--sample_list not set and no value found for $GLOBAL_SAMPLE_list. Exiting.")
+        print("--sample_list / -l not set and no value found for $GLOBAL_SAMPLE_LIST. Exiting.")
         sys.exit(1)
 
     print(f"Sample list path: {SAMPLE_list_PATH}")
