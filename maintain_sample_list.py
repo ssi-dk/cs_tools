@@ -18,17 +18,17 @@ Author: Finn Gruwier Larsen, figl@ssi.dk
 
 class SampleContainer:
     _samples: dict = {}
-    _sample_sheet_path: pathlib.Path
+    _sample_list_path: pathlib.Path
 
-    def __init__(self, sample_sheet_path: pathlib.Path):
-        self._sample_sheet_path = sample_sheet_path
-        if self._sample_sheet_path.exists():
-            print(f"{str(self._sample_sheet_path)} exists - reading file.")
-            with open(self._sample_sheet_path, 'r') as sample_sheet:
-                for (sample_name, file1, file2) in read_sample_sheet(sample_sheet):
+    def __init__(self, sample_list_path: pathlib.Path):
+        self._sample_list_path = sample_list_path
+        if self._sample_list_path.exists():
+            print(f"{str(self._sample_list_path)} exists - reading file.")
+            with open(self._sample_list_path, 'r') as sample_list:
+                for (sample_name, file1, file2) in read_sample_list(sample_list):
                     self.add_sample(sample_name, file1, file2)
         else:
-            print(f"{str(self._sample_sheet_path)} does not exist - new file.")
+            print(f"{str(self._sample_list_path)} does not exist - new file.")
     
     def add_sample(self, sample_name: str, file1: str, file2: str):
         if sample_name in self._samples:
@@ -41,22 +41,22 @@ class SampleContainer:
         return ((k, v[0], v[1]) for k, v in self._samples.items())
 
     def save(self):
-        with open(self._sample_sheet_path, 'w') as sample_sheet:
+        with open(self._sample_list_path, 'w') as sample_list:
             for k, v in self._samples.items():
                 line = '\t'.join((k, v[0], v[1])) + '\n'
                 print(f"Adding line: {line}")
-                sample_sheet.write(line)
+                sample_list.write(line)
             
 
-def read_sample_sheet(sample_sheet):
+def read_sample_list(sample_list):
     output = list()
     try:
-        next(sample_sheet)  # Ignore header
+        next(sample_list)  # Ignore header
     except StopIteration:
         print("File exists but contains no samples.")
     while True:
         try:
-            line: str = next(sample_sheet)
+            line: str = next(sample_list)
             sample_name, file1, file2 = line.rstrip().split('\t')
             output.append((sample_name, file1, file2))
         except StopIteration:
@@ -91,19 +91,19 @@ def print_samples(sample_iter: Iterable):
         print(sample[0], sample[1])
 
 def main():
-    parser = argparse.ArgumentParser(description="Create and maintain a global sample sheet for chewieSnake.")
-    parser.add_argument('-s', '--sample_sheet', help="Path and filename for global sample sheet."
-        "Default: value of envvar $GLOBAL_SAMPLE_SHEET. If file does not exist it will be created.")
+    parser = argparse.ArgumentParser(description="Create and maintain a global sample list for chewieSnake.")
+    parser.add_argument('-s', '--sample_list', help="Path and filename for global sample list."
+        "Default: value of envvar $GLOBAL_SAMPLE_list. If file does not exist it will be created.")
     parser.add_argument('-d', '--fastq_dir', help="Path to existing directory containing fastq files. Default: current directory.")
     args = parser.parse_args()
     try:
-        SAMPLE_SHEET_PATH = pathlib.Path(args.sample_sheet or os.getenv('GLOBAL_SAMPLE_SHEET'))
+        SAMPLE_list_PATH = pathlib.Path(args.sample_list or os.getenv('GLOBAL_SAMPLE_list'))
     except TypeError:
-        print("--sample_sheet not set and no value found for $GLOBAL_SAMPLE_SHEET. Exiting.")
+        print("--sample_list not set and no value found for $GLOBAL_SAMPLE_list. Exiting.")
         sys.exit(1)
 
-    print(f"Sample sheet path: {SAMPLE_SHEET_PATH}")
-    container = SampleContainer(SAMPLE_SHEET_PATH)
+    print(f"Sample list path: {SAMPLE_list_PATH}")
+    container = SampleContainer(SAMPLE_list_PATH)
     print("OLD SAMPLES:")
     print_samples(container.list_samples())
     FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
