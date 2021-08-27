@@ -2,6 +2,7 @@ import argparse
 import pathlib
 import os
 import sys
+from typing import Iterable
 
 """
 Create and maintain a global sample sheet for chewieSnake.
@@ -35,6 +36,9 @@ class SampleContainer:
             print("Exiting without modifying the file.")
             sys.exit()
         self._samples[sample_name] = (file1, file2)
+    
+    def list_samples(self):
+        return ((k, v[0], v[1]) for k, v in self._samples.items())
 
     def save(self):
         with open(self._sample_sheet_path, 'w') as sample_sheet:
@@ -81,6 +85,11 @@ def find_new_samples(fastq_dir: pathlib.Path):
             break
     return output
 
+def print_samples(sample_iter: Iterable):
+    print("Name, File 1:")
+    for sample in sample_iter:
+        print(sample[0], sample[1])
+
 parser = argparse.ArgumentParser(description="Create and maintain a global sample sheet for chewieSnake.")
 parser.add_argument('-s', '--sample_sheet', help="Path and filename for global sample sheet."
     "Default: value of envvar $GLOBAL_SAMPLE_SHEET. If file does not exist it will be created.")
@@ -95,7 +104,7 @@ except TypeError:
 print(f"Sample sheet path: {SAMPLE_SHEET_PATH}")
 container = SampleContainer(SAMPLE_SHEET_PATH)
 print("*** OLD SAMPLES:")
-print(container._samples)
+print_samples(container.list_samples())
 FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
 print(f"Folder to add fastq files from: {FASTQ_DIR}")
 
