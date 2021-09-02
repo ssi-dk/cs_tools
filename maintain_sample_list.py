@@ -5,7 +5,7 @@ import sys
 from typing import Iterable
 
 """
-Create and maintain a global sample list for controlling chewieSnake.
+Create and maintain a sample list for use with chewieSnake.
 
 Currently only fastq files are supported, and fastq file names must follow the
 Illumina standard:
@@ -42,18 +42,15 @@ class SampleContainer:
 
     def save(self):
         with open(self._sample_list_path, 'w') as sample_list:
+            sample_list.write('sample\tfq1\tfq2\n')
             for k, v in self._samples.items():
                 line = '\t'.join((k, v[0], v[1])) + '\n'
-                print(f"Adding line: {line}")
+                print(f"Adding line: {line.strip()}")
                 sample_list.write(line)
             
 
 def read_sample_list(sample_list):
     output = list()
-    try:
-        next(sample_list)  # Ignore header
-    except StopIteration:
-        print("File exists but contains no samples.")
     while True:
         try:
             line: str = next(sample_list)
@@ -63,17 +60,30 @@ def read_sample_list(sample_list):
             break
     return output
 
-def find_new_samples(fastq_dir: pathlib.Path):
+def find_new_samples(fastq_dir: pathlib.Path, species: str = None):
     """
-    Find samples in folder. Return a list of (sample_name, file1, file2)
-    where file1, file2 have full paths.
+    Find samples in folder fastq_dir.
+    If spec is provided, lookup species in run_metadata.tsv and filter by spec in second column.
+    Return a list of (sample_name, file1, file2) where file1, file2 have full paths.
     """
     r1_files_gen = fastq_dir.glob("*_S*_R1_001.fastq*")
+    if species:
+        with open(fastq_dir.joinpath('run_metadata.tsv'), 'r') as run_metadata_tsv:
+            species_lookup_dict = dict()
+            for line in run_metadata_tsv:
+                sample_species = line.split('\t')[0:2]
+                species_lookup_dict[sample_species[0]] = sample_species[1]
     output = list()
     while True:
         try:
             file1_path = pathlib.Path(next(r1_files_gen))
             sample_name = file1_path.stem[:-22]
+            if species:
+                found_species: str = species_lookup_dict[sample_name.replace("'", "")]
+                print(f"Species for {sample_name} is {found_species}.")
+                if not found_species == species:
+                    print(f"Ignoring {sample_name} - species '{found_species}' does not match '{species}'.")
+                    continue
             file1_filename = file1_path.parts[-1]
             listified_filename = list(file1_filename)
             listified_filename[-14] = '2'
@@ -94,20 +104,33 @@ def main():
     parser = argparse.ArgumentParser(description="Create and maintain a global sample list for chewieSnake.")
     parser.add_argument('sample_list', help="Path and filename for sample list. If file does not exist it will be created.")
     parser.add_argument('-d', '--fastq_dir', help="Path to existing directory containing fastq files. Default: current directory.")
+    parser.add_argument('-s', '--species', help="Optional species name to filter on. Spaces between name components must be \
+        replaced with underscores; f. ex. Salmonella_enterica.\
+        If provided, a lookup will be made in a file named 'run_metadata.tsv' inside fastq_dir, and only those \
+        samples where --species - with underscores replaced by spaces - match the second column in this file will be added to the \
+        sample list.")
     args = parser.parse_args()
-    SAMPLE_LIST_PATH = pathlib.Path(args.sample_list)
-    print(f"Sample list path: {SAMPLE_LIST_PATH}")
-    container = SampleContainer(SAMPLE_LIST_PATH)
+    sample_list_path = pathlib.Path(args.sample_list)
+    print(f"Sample list path: {sample_list_path}")
+    container = SampleContainer(sample_list_path)
     print("OLD SAMPLES:")
     print_samples(container.list_samples())
-    FASTQ_DIR = pathlib.Path(args.fastq_dir or os.getcwd())
-    print(f"Folder to add fastq files from: {FASTQ_DIR}")
-    new_samples = find_new_samples(FASTQ_DIR)
-    print("NEW SAMPLES:")
-    print_samples(new_samples)
-    for new_sample in new_samples:
-        container.add_sample(*new_sample)
-    container.save()
+    fastq_dir = pathlib.Path(args.fastq_dir or os.getcwd())
+    print(f"Folder to add fastq files from: {fastq_dir}")
+    if args.species:
+        species = str(args.species).replace('_', ' ')
+        print(f"Filter on species name: {species}.")
+    else:
+        print("Do not filter on species name.")
+    new_samples = find_new_samples(fastq_dir, species)
+    if len(new_samples) == 0:
+        print(f"No fastq files found in folder {fastq_dir} - {sample_list_path} not modified.")
+    else:
+        print("NEW SAMPLES:")
+        print_samples(new_samples)
+        for new_sample in new_samples:
+            container.add_sample(*new_sample)
+        container.save()
 
 if __name__ == '__main__':
     main()
