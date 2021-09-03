@@ -23,7 +23,7 @@ command = f"""docker run --rm \
 --sample_list {PATH_INSIDE_CONTAINER}/samples.tsv \
 --scheme {PATH_INSIDE_CONTAINER}/enterobase_senterica_cgmlst \
 --prodigal {PATH_INSIDE_CONTAINER}/Salmonella_enterica.trn \
---working_directory {PATH_INSIDE_CONTAINER}/output
+--working_directory {PATH_INSIDE_CONTAINER}/{chewiesnake_output_subfolder}
 """
 print("Command:")
 print(command)
