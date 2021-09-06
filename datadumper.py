@@ -56,6 +56,9 @@ def main():
         sample_name = next(elements)
         hash_id = next(elements)
         hashids_dict[sample_name] = hash_id
+    print("Sample name, allele hash id:")
+    for sample_name, allele_hash_id in hashids_dict.items():
+        print(sample_name, allele_hash_id)
 
     distance_matrix_file = pathlib.Path(working_directory, 'cgmlst', 'distance_matrix.tsv')
     result = update_distance_matrix(distance_matrix_file, hashids_file, args.species)
