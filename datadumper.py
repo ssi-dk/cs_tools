@@ -24,7 +24,9 @@ def update_distance_matrix(distance_matrix_file: pathlib.Path, hashids_dict: dic
     for line in distance_matrix_reader:
         elements_gen = line_splitter(line, ' ')
         sample_name = next(elements_gen)
-        print("Sample name:", sample_name)
+        allele_hash_id = hashids_dict[sample_name]
+        print("Sample name, allele hash id:")
+        print(f"{sample_name}, {allele_hash_id}")
         # key = species_name + ':' + sample_name
         # print("Key:", key)
         # Make a Redis 'sorted set' entry with distances as scores and sample names as values
@@ -57,11 +59,9 @@ def main():
         hash_id = next(elements)
         hashids_dict[sample_name] = hash_id
     print("Sample name, allele hash id:")
-    for sample_name, allele_hash_id in hashids_dict.items():
-        print(sample_name, allele_hash_id)
 
     distance_matrix_file = pathlib.Path(working_directory, 'cgmlst', 'distance_matrix.tsv')
-    result = update_distance_matrix(distance_matrix_file, hashids_file, args.species)
+    result = update_distance_matrix(distance_matrix_file, hashids_dict, args.species)
 
 if __name__ == '__main__':
     main()
