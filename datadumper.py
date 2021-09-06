@@ -8,6 +8,13 @@ bifrost_db_key = os.getenv("BIFROST_DB_KEY", "mongodb://localhost/bifrost_test")
 mg = pymongo.MongoClient(bifrost_db_key)
 db = mg.get_default_database()
 print(f"Using {db}")
+# Create 'species' collection if not found.
+if 'species' in db.list_collection_names():
+    print("'species' collection found in db.")
+else:
+    print("No 'species' collection found in db; creating it.")
+    db.create_collection('species')
+
 
 def line_reader(file_name):
     """Get lines from text file one by one using a generator
@@ -24,9 +31,6 @@ def line_splitter(line: str, splitter: str):
 
 
 def update_distance_matrix(distance_matrix_file: pathlib.Path, hashids_dict: dict, species_name: str):
-    # Open collection for the species, or create if new
-    # print(db.list_collections())
-
     # Note: the distance_matrix.tsv file from chewieSnake uses space as separator.
     print(f"Iterate over distance matrix file {distance_matrix_file}...")
     distance_matrix_reader = line_reader(distance_matrix_file)
