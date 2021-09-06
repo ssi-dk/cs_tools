@@ -4,18 +4,6 @@ import pathlib
 
 import pymongo
 
-bifrost_db_key = os.getenv("BIFROST_DB_KEY", "mongodb://localhost/bifrost_test")
-mg = pymongo.MongoClient(bifrost_db_key)
-db = mg.get_default_database()
-print(f"Using {db}")
-# Create 'species' collection if not found.
-if 'species' in db.list_collection_names():
-    print("'species' collection found in db.")
-else:
-    print("No 'species' collection found in db; creating it.")
-    db.create_collection('species')
-
-
 def line_reader(file_name):
     """Get lines from text file one by one using a generator
     """
@@ -57,8 +45,22 @@ def main():
         "A collection with this name will be created in MongoDB if it does not exist.")
     args = parser.parse_args()
     working_directory = pathlib.Path(args.working_directory)
+    assert(working_directory.exists())
 
-    # Initialize hashids_dict
+    # Initialize MongoDB connection
+    bifrost_db_key = os.getenv("BIFROST_DB_KEY", "mongodb://localhost/bifrost_test")
+    mg = pymongo.MongoClient(bifrost_db_key)
+    db = mg.get_default_database()
+    print(f"Using {db}")
+
+    # Create 'species' collection if not found
+    if 'species' in db.list_collection_names():
+        print("'species' collection found in db.")
+    else:
+        print("No 'species' collection found in db; creating it.")
+        db.create_collection('species')
+
+    # Initialize hashids_dict - for looking up hash id's from samples
     hashids_file = pathlib.Path(working_directory, 'cgmlst', 'hashids.tsv')
     hashids_reader = line_reader(hashids_file)
     next(hashids_reader)  # Skip header line
