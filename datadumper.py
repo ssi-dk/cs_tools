@@ -18,8 +18,7 @@ def line_splitter(line: str, splitter: str):
     return (value for value in line.rstrip().split(splitter))
 
 
-def update_distance_matrix(working_directory: pathlib.Path, species_name: str):
-    distance_matrix_file = pathlib.Path(working_directory, 'cgmlst', 'distance_matrix.tsv')
+def update_distance_matrix(distance_matrix_file: pathlib.Path, hashids_dict: dict, species_name: str):
     # Note: the distance_matrix.tsv file from chewieSnake uses space as separator.
     distance_matrix_reader = line_reader(distance_matrix_file)
     for line in distance_matrix_reader:
@@ -45,7 +44,21 @@ def main():
         'species', help="Species name with underscore notation, case sensitive (e. g. 'Salmonella_enterica'). " + \
         "A collection with this name will be created in MongoDB if it does not exist.")
     args = parser.parse_args()
-    result = update_distance_matrix(args.working_directory, args.species)
+    working_directory = pathlib.Path(args.working_directory)
+
+    # Initialize hashids_dict
+    hashids_file = pathlib.Path(working_directory, 'cgmlst', 'hashids.tsv')
+    hashids_reader = line_reader(hashids_file)
+    next(hashids_reader)  # Skip header line
+    hashids_dict = dict()
+    for line in hashids_reader:
+        elements = line_splitter(line, '\t')
+        sample_name = next(elements)
+        hash_id = next(elements)
+        hashids_dict[sample_name] = hash_id
+
+    distance_matrix_file = pathlib.Path(working_directory, 'cgmlst', 'distance_matrix.tsv')
+    result = update_distance_matrix(distance_matrix_file, hashids_file, args.species)
 
 if __name__ == '__main__':
     main()
