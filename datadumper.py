@@ -19,23 +19,22 @@ def line_splitter(line: str, splitter: str):
 
 
 def update_distance_matrix(distance_matrix_file: pathlib.Path, hashids_dict: dict, species_name: str):
+    # Open collection for the species, or create if new
+
     # Note: the distance_matrix.tsv file from chewieSnake uses space as separator.
     distance_matrix_reader = line_reader(distance_matrix_file)
     for line in distance_matrix_reader:
         elements_gen = line_splitter(line, ' ')
         sample_name = next(elements_gen)
         allele_hash_id = hashids_dict[sample_name]
-        print("Sample name, allele hash id:")
-        print(f"{sample_name}, {allele_hash_id}")
+        print(f"Sample {sample_name} has allele hash id {allele_hash_id}")
+        # Check if allele_hash_id already exists in for species
+
         # key = species_name + ':' + sample_name
         # print("Key:", key)
         # Make a Redis 'sorted set' entry with distances as scores and sample names as values
         # Todo: check for existing key.
         # r.zadd(key, {sample_name: next(elements_gen) for sample_name in sample_names})
-
-
-        # Todo: add argument --working_directory (chewieSnake output directory)
-        # Todo: add argument --species
     return True
 
 
