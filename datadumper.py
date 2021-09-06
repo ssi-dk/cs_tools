@@ -2,7 +2,12 @@ import argparse
 import os
 import pathlib
 
+import pymongo
+
 bifrost_db_key = os.getenv("BIFROST_DB_KEY", "mongodb://localhost/bifrost_test")
+mg = pymongo.MongoClient(bifrost_db_key)
+db = mg.get_default_database()
+print(f"Using {db}")
 
 def line_reader(file_name):
     """Get lines from text file one by one using a generator
@@ -20,14 +25,16 @@ def line_splitter(line: str, splitter: str):
 
 def update_distance_matrix(distance_matrix_file: pathlib.Path, hashids_dict: dict, species_name: str):
     # Open collection for the species, or create if new
+    # print(db.list_collections())
 
     # Note: the distance_matrix.tsv file from chewieSnake uses space as separator.
+    print(f"Iterate over distance matrix file {distance_matrix_file}...")
     distance_matrix_reader = line_reader(distance_matrix_file)
     for line in distance_matrix_reader:
         elements_gen = line_splitter(line, ' ')
         sample_name = next(elements_gen)
         allele_hash_id = hashids_dict[sample_name]
-        print(f"Sample {sample_name} has allele hash id {allele_hash_id}")
+        print(f"Sample {sample_name} has allele hash id {allele_hash_id}.")
         # Check if allele_hash_id already exists in for species
 
         # key = species_name + ':' + sample_name
@@ -57,8 +64,6 @@ def main():
         sample_name = next(elements)
         hash_id = next(elements)
         hashids_dict[sample_name] = hash_id
-    print("Sample name, allele hash id:")
-
     distance_matrix_file = pathlib.Path(working_directory, 'cgmlst', 'distance_matrix.tsv')
     result = update_distance_matrix(distance_matrix_file, hashids_dict, args.species)
 
