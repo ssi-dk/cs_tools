@@ -45,7 +45,7 @@ class SampleContainer:
             sample_list.write('sample\tfq1\tfq2\n')
             for k, v in self._samples.items():
                 line = '\t'.join((k, v[0], v[1])) + '\n'
-                print(f"Adding line: {line.strip()}")
+                print(f"Writing line to file: {line.strip()}")
                 sample_list.write(line)
             
 
