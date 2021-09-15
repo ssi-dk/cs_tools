@@ -38,7 +38,9 @@ class SampleContainer:
         self._samples[sample_name] = (file1, file2)
     
     def list_samples(self):
-        return ((k, v[0], v[1]) for k, v in self._samples.items())
+        items = ((k, v[0], v[1]) for k, v in self._samples.items())
+        next(items)  # First items is header line
+        return items
 
     def save(self):
         with open(self._sample_list_path, 'w') as sample_list:
