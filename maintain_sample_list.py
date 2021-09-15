@@ -34,9 +34,7 @@ class SampleContainer:
     
     def add_sample(self, sample_name: str, file1: str, file2: str):
         if sample_name in self._samples:
-            print(f"Error: we already have a sample with sample name {sample_name}.")
-            print("Exiting without modifying the file.")
-            sys.exit()
+            print(f"Omitting {sample_name} as it is already in sample list.")
         self._samples[sample_name] = (file1, file2)
     
     def list_samples(self):
