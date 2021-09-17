@@ -8,10 +8,10 @@ chewieSnake for SOFI.
 - Create Mamba environment: mamba create -c r -c bioconda -c conda-forge -n chewiesnake chewiesnake
 - Activate the environment: conda activate chewiesnake
 - Install pymongo in environment: mamba install pymongo
-- Copy the folder config.template to a location of your choice. This folder will contain
-species-specific configuration subfolders.
+- Copy the folder config.template as a new folder outside of the repo. This folder will contain
+species-specific configuration subfolders. For instance 'cp -r config.template ../chewie_config'.
 - For each species you want to run chewieSnake on, download an allele scheme and place it beneath
-config/(species)/schemes.
+config/(species)/schemes. Some schemes can be found here: https://seafile.bfr.berlin/d/b4a619b12db14c5eab74/
 - For each species, edit config.sh so that is has the correct parameters.
 
 ## Prepare environment
