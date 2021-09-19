@@ -30,8 +30,11 @@ sample list for all samples of a specific species. With this list, you can run c
 for that specific species. Since the list not only contains new samples but also old ones, chewieSnake
 will not only calculate distances between new samples but also between old and new ones.
 
+It will probably make sense to place each sample list in the config directory for that species. To avoid typing
+long paths, this could be set in an envvar named SEQDATA.
+
 Example:
-python maintain_sample_list.py /path/and/filename/for/sample/list -d /path/to/new/fastq/dir -s $SPECIES
+python maintain_sample_list.py ~/chewie_config/$SPECIES/sample_list.tsv -d $SEQDATA -s $SPECIES
 
 ## Run chewieSnake
 chewiesnake -t 10 --reads \
