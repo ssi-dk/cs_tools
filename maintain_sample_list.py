@@ -39,7 +39,6 @@ class SampleContainer:
     
     def list_samples(self):
         items = ((k, v[0], v[1]) for k, v in self._samples.items())
-        next(items)  # First items is header line
         return items
 
     def save(self):
