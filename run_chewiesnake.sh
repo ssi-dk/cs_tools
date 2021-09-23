@@ -28,17 +28,17 @@ cd $PBS_O_WORKDIR
 # Read parameters from species config
 source config.sh
 echo Species: $SPECIES
-scheme=$PBS_O_WORKDIR/$SCHEME
-echo Scheme: $scheme
+SCHEME=$PBS_O_WORKDIR/schemes/$SCHEME
+echo Scheme: $SCHEME
 echo Prodigal file: $PRODIGAL
-output=$PBS_O_WORKDIR/$OUTPUT
-echo Output directory: $output
+OUTPUT=$PBS_O_WORKDIR/$OUTPUT
+echo Output directory: $OUTPUT
 
 cmd="chewiesnake -t 10 --reads \
 --sample_list /home/projects/fvst_ssi_dtu/test_data/cs/Salmonella_enterica/sample_list.tsv \
---scheme /home/projects/fvst_ssi_dtu/test_data/cs/Salmonella_enterica/schemes/enterobase_senterica_cgmlst \
---prodigal $CONDA_PREFIX/opt/chewiesnake/chewBBACA/CHEWBBACA/prodigal_training_files/Salmonella_enterica.trn \
---working_directory /home/projects/fvst_ssi_dtu/test_data/cs/Salmonella_enterica/output"
+--scheme $SCHEME \
+--prodigal $PRODIGAL \
+--working_directory $OUTPUT"
 
 if [ "$1" == "--dryrun" ]; then
  cmd="${cmd} --dryrun"
