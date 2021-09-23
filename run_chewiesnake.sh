@@ -15,6 +15,23 @@ if [[ -z "${DEV_ENV}" ]]; then
   module load chewiesnake/3.0.0
 fi
 
+
+if [[ -z "${PBS_O_WORKDIR}" ]]; then
+  echo PBS_O_WORKDIR not set - probably this is not a qsub job.
+  exit 1
+fi
+
+# Go to the directory from where the job was submitted
+echo Working directory: $PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
+
+# Read parameters from species config
+source config.sh
+echo Species: $SPECIES
+echo Scheme: $SCHEME
+echo Prodigal file: $PRODIGAL
+echo Output directory: $OUTPUT
+
 cmd="chewiesnake -t 10 --reads \
 --sample_list /home/projects/fvst_ssi_dtu/test_data/cs/Salmonella_enterica/sample_list.tsv \
 --scheme /home/projects/fvst_ssi_dtu/test_data/cs/Salmonella_enterica/schemes/enterobase_senterica_cgmlst \
