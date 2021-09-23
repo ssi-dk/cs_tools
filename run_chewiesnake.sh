@@ -9,7 +9,8 @@
 ### Specify resources
 #PBS -l nodes=1:ppn=4,mem=12gb,walltime=12:00:00,advres=fvst_ssi_dtu_wiki_fodevarestyrelsen.16
 
-if ! [[-z $DEV_ENV ]]; then
+if [[ -z "${DEV_ENV}" ]]; then
+  echo Load chewieSnake from module
   module load tools
   module load chewiesnake/3.0.0
 fi
