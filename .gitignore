@@ -130,3 +130,5 @@ dmypy.json
 
 # Own additions
 *.tsv
+*.sh.e*
+*.sh.o*
