@@ -29,7 +29,7 @@ cd $PBS_O_WORKDIR
 source config.sh
 echo Species: $SPECIES
 SAMPLE_LIST=$PBS_O_WORKDIR/$1
-echo $SAMPLE_LIST
+echo Sample list: $SAMPLE_LIST
 SCHEME=$PBS_O_WORKDIR/schemes/$SCHEME
 echo Scheme: $SCHEME
 echo Prodigal file: $PRODIGAL
