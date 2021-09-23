@@ -28,9 +28,11 @@ cd $PBS_O_WORKDIR
 # Read parameters from species config
 source config.sh
 echo Species: $SPECIES
-echo Scheme: $SCHEME
+scheme=$PBS_O_WORKDIR/$SCHEME
+echo Scheme: $scheme
 echo Prodigal file: $PRODIGAL
-echo Output directory: $OUTPUT
+output=$PBS_O_WORKDIR/$OUTPUT
+echo Output directory: $output
 
 cmd="chewiesnake -t 10 --reads \
 --sample_list /home/projects/fvst_ssi_dtu/test_data/cs/Salmonella_enterica/sample_list.tsv \
