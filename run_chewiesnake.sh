@@ -23,4 +23,9 @@ then
  cmd="${cmd} --dryrun"
 fi
 
+if [ "$1" == "--unlock" ]
+then
+ cmd="${cmd} --unlock"
+fi
+
 $cmd
