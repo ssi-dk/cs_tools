@@ -48,6 +48,7 @@ class SampleContainer:
                 line = '\t'.join((k, v[0], v[1])) + '\n'
                 print(f"Writing line to file: {line.strip()}")
                 sample_list.write(line)
+            sample_list.write('\n')
             
 
 def read_sample_list(sample_list):
