@@ -42,14 +42,38 @@ in the seqdata folder.
 
 ## Run chewieSnake
 
-Example:
+### Running chewieSnake without HPC job control
+Normal run:
 cd /path/to/cs/Salmonella_enterica
-chewiesnake -t 10 --reads \
---sample_list sample_list.tsv \
---scheme $SCHEME \
---prodigal $PRODIGAL \
---working_directory $OUTPUT
+/path/to/run_chewiesnake sample_list.tsv
+
+'Dry run' (not really running, just simulating):
+cd /path/to/cs/Salmonella_enterica
+/path/to/run_chewiesnake sample_list.tsv --dryrun
+
+Unlock output directory:
+'Dry run' (not really running, just simulating):
+cd /path/to/cs/Salmonella_enterica
+/path/to/run_chewiesnake sample_list.tsv --unlock
+
+### Create an HPC job (with Torque)
+Normal run:
+cd /path/to/cs/Salmonella_enterica
+qsub -F "sample_list.tsv" run_chewiesnake.sh 
+
+'Dry run' (not really running, just simulating):
+cd /path/to/cs/Salmonella_enterica
+qsub -F "sample_list.tsv --dryrun" run_chewiesnake.sh
+
+Unlock output directory:
+'Dry run' (not really running, just simulating):
+cd /path/to/cs/Salmonella_enterica
+qsub -F "sample_list.tsv --unlock" run_chewiesnake.sh
+
+If you are in an interactive HPC job, you might also use the commands described in
+"Running chewieSnake without HPC job control".
 
 Note that the $SCHEME location has to be writeable since chewieSnake will place temporary data in it.
 Most importantly, it will place a folder named .lock which indicates that a chewieSnake process is active
-using this scheme. This would prevent more chewieSnake processes running on the same data.
+using this scheme. This would prevent more chewieSnake processes running on the same data. This lock is
+different the one that locks the output directory.
