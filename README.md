@@ -44,31 +44,30 @@ in the seqdata folder.
 
 ### Running chewieSnake without HPC job control
 Normal run:
-cd /path/to/cs/Salmonella_enterica
-/path/to/run_chewiesnake sample_list.tsv
+- cd /path/to/cs/Salmonella_enterica
+- /path/to/run_chewiesnake sample_list.tsv
 
 'Dry run' (not really running, just simulating):
-cd /path/to/cs/Salmonella_enterica
-/path/to/run_chewiesnake sample_list.tsv --dryrun
+- cd /path/to/cs/Salmonella_enterica
+- /path/to/run_chewiesnake sample_list.tsv --dryrun
 
 Unlock output directory:
 'Dry run' (not really running, just simulating):
-cd /path/to/cs/Salmonella_enterica
-/path/to/run_chewiesnake sample_list.tsv --unlock
+- cd /path/to/cs/Salmonella_enterica
+- /path/to/run_chewiesnake sample_list.tsv --unlock
 
 ### Create an HPC job (with Torque)
 Normal run:
-cd /path/to/cs/Salmonella_enterica
-qsub -F "sample_list.tsv" run_chewiesnake.sh 
+- cd /path/to/cs/Salmonella_enterica
+- qsub -F "sample_list.tsv" run_chewiesnake.sh 
 
 'Dry run' (not really running, just simulating):
-cd /path/to/cs/Salmonella_enterica
-qsub -F "sample_list.tsv --dryrun" run_chewiesnake.sh
+- cd /path/to/cs/Salmonella_enterica
+- qsub -F "sample_list.tsv --dryrun" run_chewiesnake.sh
 
 Unlock output directory:
-'Dry run' (not really running, just simulating):
-cd /path/to/cs/Salmonella_enterica
-qsub -F "sample_list.tsv --unlock" run_chewiesnake.sh
+- cd /path/to/cs/Salmonella_enterica
+- qsub -F "sample_list.tsv --unlock" run_chewiesnake.sh
 
 If you are in an interactive HPC job, you might also use the commands described in
 "Running chewieSnake without HPC job control".
