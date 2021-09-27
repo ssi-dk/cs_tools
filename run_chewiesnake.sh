@@ -13,27 +13,31 @@ if [[ -z "${DEV_ENV}" ]]; then
   echo Load chewieSnake from module
   module load tools
   module load chewiesnake/3.0.0
+
+  if [[ -z "${PBS_O_WORKDIR}" && -z $2 ]]; then
+    echo PBS_O_WORKDIR set, DEV_ENV not set, and script called without options - exiting.
+    exit 1
+  fi
 fi
 
-
-if [[ -z "${PBS_O_WORKDIR}" ]]; then
-  echo PBS_O_WORKDIR not set - probably this is not a qsub job.
-  exit 1
+# Go to the directory from where the script was called
+if [[ $PBS_O_WORKDIR ]]; then
+  DIR=$PBS_O_WORKDIR
+else
+  DIR=$PWD
 fi
-
-# Go to the directory from where the job was submitted
-echo Working directory: $PBS_O_WORKDIR
-cd $PBS_O_WORKDIR
+echo Working directory: $DIR
+cd $DIR
 
 # Read parameters from species config
 source config.sh
 echo Species: $SPECIES
-SAMPLE_LIST=$PBS_O_WORKDIR/$1
+SAMPLE_LIST=$DIR/$1
 echo Sample list: $SAMPLE_LIST
-SCHEME=$PBS_O_WORKDIR/schemes/$SCHEME
+SCHEME=$DIR/schemes/$SCHEME
 echo Scheme: $SCHEME
 echo Prodigal file: $PRODIGAL
-OUTPUT=$PBS_O_WORKDIR/$OUTPUT
+OUTPUT=$DIR/$OUTPUT
 echo Output directory: $OUTPUT
 
 cmd="chewiesnake -t 10 --reads \
