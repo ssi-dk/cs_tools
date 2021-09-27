@@ -5,15 +5,26 @@ chewieSnake for SOFI.
 chewieSnake must be installed and available as a command. In a dev environment, the
 preferred way is by using the Mamba package manager - see chewieSnake install instructions.
 
-## How to use this repo
-- Check out this repo somewhere on your filesystem.
-- Copy the folder config.template as a new folder outside of the repo; call it f. ex. 'cs', so 'cp -r config.template ../cs'.
-This folder will contain species-specific subfolders which will contain everything related to that species:
-config, schemas, sample list, output, etc.
-- For each species you want to run chewieSnake on, download an allele scheme and place it beneath
+Also check out this repo somewhere on your filesystem.
+
+## Basic installation
+Copy the folder config.template as a new folder outside of the repo; call it f. ex. 'cs', so 'cp -r config.template ../cs'.
+This folder will be the top-level chewieSnake config folder. It will contain species-specific subfolders which
+will contain all config specific the that species.
+
+## Config for one species
+- cd to the the species-specific subfolder you want to use (for instance, Salmonella_enterica). If the folder
+for the species does not exist, create it by copying the Salmonella_enterica subfolder with all its contents.
+- For each allele scheme you want to use for this species, download the scheme scheme and place it beneath
 cs/(species)/schemes. Some schemes can be found here: https://seafile.bfr.berlin/d/b4a619b12db14c5eab74/
-- For each species, edit config.sh so that is has the correct parameters. The file will be read by the
-script run_chewiesnake.sh
+- Edit config.sh so that is has the correct parameters. The file will be read by the
+script run_chewiesnake.sh. Check that the parameters are set correctly by running:
+
+source config.sh
+echo $SPECIES
+echo $SCHEME
+echo $PRODIGAL
+echo $OUTPUT
 
 ## Prepare sample list
 maintain_sample_list.py is a script for creating and maintaining sample lists for chewieSnake.
