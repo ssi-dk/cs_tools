@@ -85,7 +85,6 @@ def find_new_samples(fastq_dir: pathlib.Path, species: str = None):
             sample_name = file1_path.stem[:-22]
             if species:
                 found_species: str = species_lookup_dict[sample_name.replace("'", "")]
-                print(f"Species for {sample_name} is {found_species}.")
                 if not found_species == species:
                     print(f"Ignoring {sample_name} - species '{found_species}' does not match '{species}'.")
                     continue
