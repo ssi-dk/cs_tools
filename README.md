@@ -8,10 +8,12 @@ preferred way is by using the Mamba package manager - see chewieSnake install in
 ## How to use this repo
 - Check out this repo somewhere on your filesystem.
 - Copy the folder config.template as a new folder outside of the repo; call it f. ex. 'cs', so 'cp -r config.template ../cs'.
-This folder will contain species-specific subfolders which will contain everything related to that species: config, schemas, sample list, output, etc.
+This folder will contain species-specific subfolders which will contain everything related to that species:
+config, schemas, sample list, output, etc.
 - For each species you want to run chewieSnake on, download an allele scheme and place it beneath
 cs/(species)/schemes. Some schemes can be found here: https://seafile.bfr.berlin/d/b4a619b12db14c5eab74/
-- For each species, edit config.sh so that is has the correct parameters.
+- For each species, edit config.sh so that is has the correct parameters. The file will be read by the
+script run_chewiesnake.sh
 
 ## Prepare sample list
 maintain_sample_list.py is a script for creating and maintaining sample lists for chewieSnake.
