@@ -13,16 +13,6 @@ This folder will contain species-specific subfolders which will contain everythi
 cs/(species)/schemes. Some schemes can be found here: https://seafile.bfr.berlin/d/b4a619b12db14c5eab74/
 - For each species, edit config.sh so that is has the correct parameters.
 
-## Prepare environment variables
-- Make sure the chewiesnake command is availableconda activate chewiesnake
-- cd /path/to/cs/Species_underscored
-- . config.sh
-- Check that environment variables are set correctly:
-echo $SPECIES
-echo $SCHEME
-echo $PRODIGAL
-echo $OUTPUT
-
 ## Prepare sample list
 maintain_sample_list.py is a script for creating and maintaining sample lists for chewieSnake.
 Normally these sample lists will be species-specific, i. e. you will maintain one "global"
@@ -33,12 +23,13 @@ will not only calculate distances between new samples but also between old and n
 Decide what sequence data input folder you want to run though chewieSnake. It's probably a good idea
 to set the path in an envvar ($SEQDATA like in the example below).
 
-Example:
-python maintain_sample_list.py /path/to/cs/$SPECIES/sample_list.tsv -d $SEQDATA -s $SPECIES
+Example (running from the same directory as sample_list.tsv):
 
-It's important to use the $SPECIES option since this will make a list only with samples of the
-relevant species. maintain_sample_list.py will looku p the species in a file named run_metadata.tsv
-in the seqdata folder.
+/path/to/maintain_sample_list.py sample_list.tsv -s Salmonella_enterica -d /path/to/run_folder
+
+It's important to use the -s option option since this will make a list only with samples of the
+relevant species. maintain_sample_list.py will look up the species in a file named run_metadata.tsv
+in the seqdata folder, so make sure this file is present.
 
 ## Run chewieSnake
 
@@ -46,6 +37,11 @@ in the seqdata folder.
 Normal run:
 - cd /path/to/cs/Salmonella_enterica
 - /path/to/run_chewiesnake sample_list.tsv
+
+Note: 'normal run' without running through HPC is only possible in a development
+environment, i. e. in an environmment where the envvar DEV_ENV is not set. This is
+to prevent a user from accidentally starting a 'real' chewieSnake run without using the
+HPC.
 
 'Dry run' (not really running, just simulating):
 - cd /path/to/cs/Salmonella_enterica
