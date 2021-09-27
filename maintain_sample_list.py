@@ -30,6 +30,8 @@ class SampleContainer:
             print(f"{str(self._sample_list_path)} exists - reading file.")
             with open(self._sample_list_path, 'r') as sample_list:
                 for (sample_name, file1, file2) in read_sample_list(sample_list):
+                    if sample_name == 'sample':  # ignore header
+                        continue
                     self.add_sample(sample_name, file1, file2)
         else:
             print(f"{str(self._sample_list_path)} does not exist - new file.")
@@ -48,7 +50,6 @@ class SampleContainer:
             sample_list.write('sample\tfq1\tfq2\n')
             for k, v in self._samples.items():
                 line = '\t'.join((k, v[0], v[1])) + '\n'
-                print(f"Writing line to file: {line.strip()}")
                 sample_list.write(line)
             sample_list.write('\n')
             
