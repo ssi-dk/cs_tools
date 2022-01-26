@@ -1,4 +1,4 @@
-# sofi_chewie
+# cs_tools
 chewieSnake for SOFI.
 
 ## Prerequisites
